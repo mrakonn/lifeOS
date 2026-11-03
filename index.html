@@ -1,102 +1,824 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head><link rel="manifest" href="./manifest.json">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-<meta name="theme-color" content="#09090b">
+<meta name="theme-color" content="#09090f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="LifeOS">
 
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("LifeOS PWA activated"))
-      .catch(error => console.error("PWA error:", error));
-  });
-}
-</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#09090b">
-<title>LifeOS AI</title>
+<link rel="manifest" href="./manifest.json">
+
+<title>LifeOS 2.0</title>
+
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;padding:24px 18px;
- background:#09090b;color:#f4f4f5;
- font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+:root {
+  --bg: #09090f;
+  --card: rgba(255,255,255,0.055);
+  --border: rgba(255,255,255,0.09);
+  --text: #f5f5f7;
+  --muted: #85858f;
+  --accent: #a78bfa;
+  --green: #68dba0;
 }
-header{display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:23px;font-weight:800;letter-spacing:2px}
-.date{color:#999;font-size:13px;margin-top:30px}
-h1{font-size:32px;margin:8px 0}
-.subtitle{color:#999;font-size:14px}
-.card{
- background:#17171c;border:1px solid #292930;
- border-radius:18px;padding:20px;margin-top:18px;
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
-.label{color:#999;font-size:12px;text-transform:uppercase;letter-spacing:1px}
-.big{font-size:25px;font-weight:700;margin-top:12px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.tile{
- background:#17171c;border:1px solid #292930;
- border-radius:16px;padding:18px 14px;
- min-height:105px;
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 55px 20px 110px;
 }
-.icon{font-size:23px}
-.tile h3{font-size:15px;margin:12px 0 0}
-.tile p{font-size:12px;color:#999;margin:5px 0}
-button{
- width:100%;padding:16px;border:0;border-radius:14px;
- background:#eee;color:#111;font-size:15px;font-weight:700;
- margin-top:15px;
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-footer{text-align:center;color:#666;font-size:11px;margin:35px 0 15px}
+
+.logo {
+  font-size: 23px;
+  font-weight: 850;
+  letter-spacing: 2px;
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+.clock {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.date {
+  margin-top: 35px;
+  color: var(--muted);
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+h1 {
+  font-size: 34px;
+  margin: 8px 0;
+  letter-spacing: -1.5px;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 23px;
+  padding: 20px;
+  margin-top: 18px;
+  backdrop-filter: blur(20px);
+}
+
+.label {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.big {
+  font-size: 27px;
+  font-weight: 750;
+  margin-top: 12px;
+}
+
+.progress {
+  height: 7px;
+  background: #292934;
+  border-radius: 20px;
+  margin-top: 17px;
+  overflow: hidden;
+}
+
+.progress div {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 20px;
+  transition: width .3s;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.tile {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 19px;
+  padding: 17px;
+  min-height: 115px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.tile:active {
+  transform: scale(.96);
+}
+
+.icon {
+  font-size: 25px;
+}
+
+.tile h3 {
+  font-size: 15px;
+  margin: 13px 0 4px;
+}
+
+.tile p {
+  color: var(--muted);
+  font-size: 11px;
+  margin: 0;
+}
+
+button {
+  border: none;
+  border-radius: 13px;
+  padding: 14px;
+  background: var(--accent);
+  color: #100d19;
+  font-weight: 750;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 13px;
+  border: 1px solid var(--border);
+  background: #171720;
+  color: white;
+  font-size: 15px;
+  outline: none;
+}
+
+.row {
+  display: flex;
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.row button {
+  min-width: 52px;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.task:last-child {
+  border: none;
+}
+
+.task input {
+  width: 19px;
+  height: 19px;
+  accent-color: var(--accent);
+}
+
+.done {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+  animation: appear .25s ease;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-title {
+  font-size: 25px;
+  margin: 25px 0 5px;
+}
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(15,15,23,.94);
+  backdrop-filter: blur(25px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 13px 5px calc(20px + env(safe-area-inset-bottom));
+  z-index: 10;
+}
+
+.nav button {
+  background: none;
+  color: var(--muted);
+  padding: 5px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.nav button.active {
+  color: var(--accent);
+}
+
+.nav span {
+  display: block;
+  font-size: 21px;
+  margin-bottom: 4px;
+}
+
+.small {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+footer {
+  text-align: center;
+  color: #555560;
+  font-size: 10px;
+  margin-top: 35px;
+}
 </style>
 </head>
+
 <body>
+
 <header>
- <div class="logo">LIFEOS <span style="color:#a78bfa">AI</span></div>
- <div>⚙️</div>
+  <div class="logo">LIFEOS <span>2.0</span></div>
+  <div class="clock" id="clock">00:00</div>
 </header>
 
+<!-- HOME -->
+
+<main id="home" class="page active">
+
 <div class="date" id="date"></div>
+
 <h1>Твой день.</h1>
-<div class="subtitle">Твоя жизнь под контролем.</div>
+
+<div class="subtitle">Маленькие шаги. Большие изменения.</div>
 
 <div class="card">
- <div class="label">Главный помощник</div>
- <div class="big">С чего начнём?</div>
- <div class="subtitle">Разложим дела на небольшие шаги.</div>
- <button onclick="alert('AI-помощник скоро появится')">
- Открыть AI-помощника →
- </button>
+  <div class="label">Твой прогресс</div>
+  <div class="big" id="progressText">0 / 0</div>
+  <div class="subtitle">Выполненные задачи сегодня</div>
+  <div class="progress">
+    <div id="progressBar"></div>
+  </div>
 </div>
 
 <div class="card">
- <div class="label">Сегодня</div>
- <div class="big">0 выполнено</div>
- <div class="subtitle">Твой прогресс будет отображаться здесь.</div>
+  <div class="label">Быстрое действие</div>
+  <div class="big">С чего начнём?</div>
+  <div class="subtitle">Необязательно делать всё сразу.</div>
+
+  <div class="row">
+    <input id="quickTask" placeholder="Добавить задачу...">
+    <button onclick="addTask()">+</button>
+  </div>
 </div>
 
-<div class="grid" style="margin-top:15px">
- <div class="tile"><div class="icon">📅</div><h3>Расписание</h3><p>Планирование дня</p></div>
- <div class="tile"><div class="icon">🎯</div><h3>Привычки</h3><p>Ежедневный контроль</p></div>
- <div class="tile"><div class="icon">💪</div><h3>Здоровье</h3><p>Вес и тренировки</p></div>
- <div class="tile"><div class="icon">💰</div><h3>Финансы</h3><p>Доходы и расходы</p></div>
- <div class="tile"><div class="icon">📚</div><h3>Обучение</h3><p>Навыки и развитие</p></div>
- <div class="tile"><div class="icon">📊</div><h3>Статистика</h3><p>Твой прогресс</p></div>
+<div class="card">
+  <div class="label">Сегодняшние задачи</div>
+  <div id="homeTasks">
+    <div class="small">Загрузка...</div>
+  </div>
 </div>
 
-<footer>LIFEOS AI · PERSONAL OPERATING SYSTEM</footer>
+<div class="grid">
+
+  <div class="tile" onclick="openPage('schedule')">
+    <div class="icon">📅</div>
+    <h3>Расписание</h3>
+    <p>Планирование дня</p>
+  </div>
+
+  <div class="tile" onclick="openPage('habits')">
+    <div class="icon">🎯</div>
+    <h3>Привычки</h3>
+    <p>Ежедневный контроль</p>
+  </div>
+
+  <div class="tile" onclick="openPage('health')">
+    <div class="icon">💪</div>
+    <h3>Здоровье</h3>
+    <p>Вес и тренировки</p>
+  </div>
+
+  <div class="tile" onclick="openPage('food')">
+    <div class="icon">🍳</div>
+    <h3>Питание</h3>
+    <p>Рацион и вода</p>
+  </div>
+
+  <div class="tile" onclick="openPage('finance')">
+    <div class="icon">💰</div>
+    <h3>Финансы</h3>
+    <p>Доходы и расходы</p>
+  </div>
+
+  <div class="tile" onclick="openPage('learning')">
+    <div class="icon">📚</div>
+    <h3>Обучение</h3>
+    <p>Развитие навыков</p>
+  </div>
+
+</div>
+</main>
+
+<!-- TASKS -->
+
+<section id="tasks" class="page">
+
+<h2 class="section-title">Задачи</h2>
+<div class="subtitle">Разбивай большие дела на маленькие.</div>
+
+<div class="card">
+  <div class="label">Новая задача</div>
+  <div class="row">
+    <input id="taskInput" placeholder="Что нужно сделать?">
+    <button onclick="addTask()">+</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="label">Список задач</div>
+  <div id="taskList"></div>
+</div>
+
+</section>
+
+<!-- SCHEDULE -->
+
+<section id="schedule" class="page">
+
+<h2 class="section-title">Расписание</h2>
+<div class="subtitle">Твой день по времени.</div>
+
+<div class="card">
+  <div class="label">Распорядок дня</div>
+  <div class="task">06:00 — Подъём</div>
+  <div class="task">06:30 — Утренние процедуры</div>
+  <div class="task">07:00 — Завтрак</div>
+  <div class="task">09:00 — Основные дела</div>
+  <div class="task">13:00 — Обед</div>
+  <div class="task">18:00 — Ужин</div>
+  <div class="task">21:30 — Личное время / тренировка</div>
+  <div class="task">23:30 — Подготовка ко сну</div>
+</div>
+
+<div class="small">Расписание пока предварительное. Позже сделаем полноценный редактор.</div>
+
+</section>
+
+<!-- HABITS -->
+
+<section id="habits" class="page">
+
+<h2 class="section-title">Привычки</h2>
+<div class="subtitle">Регулярность важнее идеальности.</div>
+
+<div class="card">
+  <div class="label">Ежедневный контроль</div>
+  <div id="habitList"></div>
+</div>
+
+</section>
+
+<!-- HEALTH -->
+
+<section id="health" class="page">
+
+<h2 class="section-title">Здоровье</h2>
+<div class="subtitle">Твоё физическое состояние.</div>
+
+<div class="card">
+  <div class="label">Текущий вес</div>
+  <div class="big" id="currentWeight">— кг</div>
+
+  <div class="row">
+    <input id="weightInput" type="number" step="0.1" placeholder="Вес в кг">
+    <button onclick="saveWeight()">OK</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="label">Тренировки</div>
+  <div class="big">45–60 минут</div>
+  <div class="subtitle">Целевое время активности.</div>
+</div>
+
+</section>
+
+<!-- FOOD -->
+
+<section id="food" class="page">
+
+<h2 class="section-title">Питание</h2>
+<div class="subtitle">Контроль ежедневного рациона.</div>
+
+<div class="card">
+  <div class="label">Питание</div>
+  <div class="big">Твой рацион</div>
+  <p class="small">Здесь появится планирование приёмов пищи, калорий и продуктов.</p>
+</div>
+
+</section>
+
+<!-- FINANCE -->
+
+<section id="finance" class="page">
+
+<h2 class="section-title">Финансы</h2>
+<div class="subtitle">Управление личным бюджетом.</div>
+
+<div class="card">
+  <div class="label">Финансовая система</div>
+  <div class="big">Мои финансы</div>
+  <p class="small">Здесь появятся доходы, расходы, накопления и финансовые цели.</p>
+</div>
+
+</section>
+
+<!-- LEARNING -->
+
+<section id="learning" class="page">
+
+<h2 class="section-title">Обучение</h2>
+<div class="subtitle">Инвестиции в собственное развитие.</div>
+
+<div class="card">
+  <div class="label">Образование</div>
+  <div class="big">IT / Programming</div>
+  <p class="small">Здесь будет система обучения, курсы, английский и отслеживание прогресса.</p>
+</div>
+
+</section>
+
+<!-- NAVIGATION -->
+
+<nav class="nav">
+
+<button class="active" onclick="openPage('home',this)">
+  <span>⌂</span>Главная
+</button>
+
+<button onclick="openPage('tasks',this)">
+  <span>✓</span>Задачи
+</button>
+
+<button onclick="openPage('schedule',this)">
+  <span>▦</span>День
+</button>
+
+<button onclick="openPage('health',this)">
+  <span>♡</span>Здоровье
+</button>
+
+<button onclick="openPage('habits',this)">
+  <span>◉</span>Привычки
+</button>
+
+</nav>
+
+<script src="./db.js"></script>
 
 <script>
-document.getElementById('date').textContent =
-new Date().toLocaleDateString('ru-RU',{
- weekday:'long',day:'numeric',month:'long',year:'numeric'
+
+let tasks = [];
+let habits = [];
+
+function openPage(page, button) {
+
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  document.getElementById(page).classList.add('active');
+
+  document.querySelectorAll('.nav button').forEach(b => {
+    b.classList.remove('active');
+  });
+
+  if(button) button.classList.add('active');
+
+  if(page === 'tasks') renderTasks();
+  if(page === 'habits') renderHabits();
+
+  window.scrollTo(0,0);
+}
+
+function updateClock() {
+
+  const now = new Date();
+
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('ru-RU',{
+      hour:'2-digit',
+      minute:'2-digit'
+    });
+
+  document.getElementById('date').textContent =
+    now.toLocaleDateString('ru-RU',{
+      weekday:'long',
+      day:'numeric',
+      month:'long',
+      year:'numeric'
+    });
+
+}
+
+setInterval(updateClock,1000);
+updateClock();
+
+async function loadTasks() {
+
+  tasks = await LifeOSDB.getAll('tasks');
+
+  const today = new Date().toDateString();
+
+  tasks = tasks.filter(t => t.day === today);
+
+  renderTasks();
+  updateProgress();
+
+}
+
+async function addTask() {
+
+  const input =
+    document.getElementById('taskInput');
+
+  const quick =
+    document.getElementById('quickTask');
+
+  const field =
+    input.value.trim() ? input : quick;
+
+  const text = field.value.trim();
+
+  if(!text) return;
+
+  await LifeOSDB.save('tasks',{
+    text,
+    completed:false,
+    day:new Date().toDateString()
+  });
+
+  input.value = '';
+  quick.value = '';
+
+  await loadTasks();
+
+}
+
+async function toggleTask(id, completed) {
+
+  const task = tasks.find(t => t.id === id);
+
+  if(!task) return;
+
+  await LifeOSDB.save('tasks',{
+    ...task,
+    completed
+  });
+
+  await loadTasks();
+
+}
+
+async function deleteTask(id) {
+
+  await LifeOSDB.remove('tasks',id);
+
+  await loadTasks();
+
+}
+
+function renderTasks() {
+
+  const html = tasks.map(task => `
+    <div class="task">
+      <input type="checkbox"
+        ${task.completed ? 'checked' : ''}
+        onchange="toggleTask(${task.id},this.checked)">
+
+      <span class="${task.completed ? 'done' : ''}">
+        ${escapeHTML(task.text)}
+      </span>
+
+      <button
+        style="margin-left:auto;padding:7px 10px;background:#30303b;color:white"
+        onclick="deleteTask(${task.id})">
+        ×
+      </button>
+    </div>
+  `).join('');
+
+  document.getElementById('taskList').innerHTML =
+    html || '<p class="small">Пока нет задач.</p>';
+
+  document.getElementById('homeTasks').innerHTML =
+    html || '<p class="small">Добавь первую задачу.</p>';
+
+}
+
+function updateProgress() {
+
+  const total = tasks.length;
+
+  const completed =
+    tasks.filter(t => t.completed).length;
+
+  document.getElementById('progressText').textContent =
+    `${completed} / ${total}`;
+
+  document.getElementById('progressBar').style.width =
+    total ? `${completed / total * 100}%` : '0%';
+
+}
+
+function escapeHTML(text) {
+  return String(text).replace(/[&<>"']/g, c => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  })[c]);
+}
+
+const defaultHabits = [
+  'Выпить достаточно воды',
+  'Утренняя гигиена',
+  'Чтение',
+  'Физическая активность',
+  'Изучение английского',
+  'Порядок вокруг себя',
+  'Вечерняя гигиена'
+];
+
+async function renderHabits() {
+
+  const saved = await LifeOSDB.getAll('habits');
+
+  const today = new Date().toDateString();
+
+  const html = defaultHabits.map((name,index) => {
+
+    const habit = saved.find(h =>
+      h.name === name && h.day === today
+    );
+
+    return `
+      <div class="task">
+        <input type="checkbox"
+          ${habit && habit.completed ? 'checked' : ''}
+          onchange="toggleHabit('${index}',this.checked)">
+
+        <span class="${habit && habit.completed ? 'done' : ''}">
+          ${name}
+        </span>
+      </div>
+    `;
+
+  }).join('');
+
+  document.getElementById('habitList').innerHTML = html;
+
+}
+
+async function toggleHabit(index,completed) {
+
+  const name = defaultHabits[index];
+
+  const saved = await LifeOSDB.getAll('habits');
+
+  const today = new Date().toDateString();
+
+  const existing = saved.find(h =>
+    h.name === name && h.day === today
+  );
+
+  if(existing) {
+    await LifeOSDB.save('habits',{
+      ...existing,
+      completed
+    });
+  } else {
+    await LifeOSDB.save('habits',{
+      name,
+      day:today,
+      completed
+    });
+  }
+
+  await renderHabits();
+
+}
+
+async function saveWeight() {
+
+  const input = document.getElementById('weightInput');
+
+  const value = Number(input.value);
+
+  if(!value || value < 20 || value > 300) {
+    alert('Введи корректный вес');
+    return;
+  }
+
+  await LifeOSDB.save('weight',{
+    value,
+    date:new Date().toISOString()
+  });
+
+  input.value = '';
+
+  await loadWeight();
+
+}
+
+async function loadWeight() {
+
+  const weights = await LifeOSDB.getAll('weight');
+
+  weights.sort((a,b) =>
+    new Date(b.date) - new Date(a.date)
+  );
+
+  document.getElementById('currentWeight').textContent =
+    weights.length ? weights[0].value + ' кг' : '— кг';
+
+}
+
+async function init() {
+
+  await LifeOSDB.init();
+
+  await loadTasks();
+
+  await loadWeight();
+
+  await renderHabits();
+
+  console.log('LifeOS 2.0 ONLINE');
+
+}
+
+init().catch(error => {
+  console.error('LifeOS error:',error);
+  alert('Ошибка загрузки LifeOS. Проверь консоль.');
 });
+
+if ('serviceWorker' in navigator) {
+
+  window.addEventListener('load',() => {
+
+    navigator.serviceWorker.register('./sw.js')
+      .catch(error => console.error(error));
+
+  });
+
+}
+
 </script>
-  <script src="./db.js"></script>
+
 </body>
 </html>
