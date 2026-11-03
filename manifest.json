@@ -1,0 +1,11 @@
+{
+  "name": "LifeOS",
+  "short_name": "LifeOS",
+  "description": "Personal Life Operating System",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "orientation": "portrait",
+  "icons": []
+}
