@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#09090b">
+<title>LifeOS AI</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;padding:24px 18px;
+ background:#09090b;color:#f4f4f5;
+ font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+}
+header{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:23px;font-weight:800;letter-spacing:2px}
+.date{color:#999;font-size:13px;margin-top:30px}
+h1{font-size:32px;margin:8px 0}
+.subtitle{color:#999;font-size:14px}
+.card{
+ background:#17171c;border:1px solid #292930;
+ border-radius:18px;padding:20px;margin-top:18px;
+}
+.label{color:#999;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.big{font-size:25px;font-weight:700;margin-top:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{
+ background:#17171c;border:1px solid #292930;
+ border-radius:16px;padding:18px 14px;
+ min-height:105px;
+}
+.icon{font-size:23px}
+.tile h3{font-size:15px;margin:12px 0 0}
+.tile p{font-size:12px;color:#999;margin:5px 0}
+button{
+ width:100%;padding:16px;border:0;border-radius:14px;
+ background:#eee;color:#111;font-size:15px;font-weight:700;
+ margin-top:15px;
+}
+footer{text-align:center;color:#666;font-size:11px;margin:35px 0 15px}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">LIFEOS <span style="color:#a78bfa">AI</span></div>
+ <div>⚙️</div>
+</header>
+
+<div class="date" id="date"></div>
+<h1>Твой день.</h1>
+<div class="subtitle">Твоя жизнь под контролем.</div>
+
+<div class="card">
+ <div class="label">Главный помощник</div>
+ <div class="big">С чего начнём?</div>
+ <div class="subtitle">Разложим дела на небольшие шаги.</div>
+ <button onclick="alert('AI-помощник скоро появится')">
+ Открыть AI-помощника →
+ </button>
+</div>
+
+<div class="card">
+ <div class="label">Сегодня</div>
+ <div class="big">0 выполнено</div>
+ <div class="subtitle">Твой прогресс будет отображаться здесь.</div>
+</div>
+
+<div class="grid" style="margin-top:15px">
+ <div class="tile"><div class="icon">📅</div><h3>Расписание</h3><p>Планирование дня</p></div>
+ <div class="tile"><div class="icon">🎯</div><h3>Привычки</h3><p>Ежедневный контроль</p></div>
+ <div class="tile"><div class="icon">💪</div><h3>Здоровье</h3><p>Вес и тренировки</p></div>
+ <div class="tile"><div class="icon">💰</div><h3>Финансы</h3><p>Доходы и расходы</p></div>
+ <div class="tile"><div class="icon">📚</div><h3>Обучение</h3><p>Навыки и развитие</p></div>
+ <div class="tile"><div class="icon">📊</div><h3>Статистика</h3><p>Твой прогресс</p></div>
+</div>
+
+<footer>LIFEOS AI · PERSONAL OPERATING SYSTEM</footer>
+
+<script>
+document.getElementById('date').textContent =
+new Date().toLocaleDateString('ru-RU',{
+ weekday:'long',day:'numeric',month:'long',year:'numeric'
+});
+</script>
+</body>
+</html>
