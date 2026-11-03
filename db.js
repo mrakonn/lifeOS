@@ -1,6 +1,6 @@
 const LifeOSDB = (() => {
   const DB_NAME = "LifeOS";
-  const DB_VERSION = 1;
+  const DB_VERSION = 2;
 
   const STORES = [
     "tasks",
@@ -10,8 +10,10 @@ const LifeOSDB = (() => {
     "sleep",
     "dailyLogs",
     "settings",
-    "notes"
-  ];
+    "notes",
+    "schedule"
+];
+    
 
   let database;
 
