@@ -386,24 +386,42 @@ footer {
 
 <!-- SCHEDULE -->
 
+
 <section id="schedule" class="page">
 
 <h2 class="section-title">Расписание</h2>
-<div class="subtitle">Твой день по времени.</div>
+<div class="subtitle">Твой день под контролем.</div>
 
 <div class="card">
-  <div class="label">Распорядок дня</div>
-  <div class="task">06:00 — Подъём</div>
-  <div class="task">06:30 — Утренние процедуры</div>
-  <div class="task">07:00 — Завтрак</div>
-  <div class="task">09:00 — Основные дела</div>
-  <div class="task">13:00 — Обед</div>
-  <div class="task">18:00 — Ужин</div>
-  <div class="task">21:30 — Личное время / тренировка</div>
-  <div class="task">23:30 — Подготовка ко сну</div>
+  <div class="label">Текущее время</div>
+  <div class="big" id="scheduleClock">00:00</div>
+  <div class="small" id="currentEvent">Загрузка расписания...</div>
 </div>
 
-<div class="small">Расписание пока предварительное. Позже сделаем полноценный редактор.</div>
+<div class="card">
+  <div class="label">Добавить событие</div>
+
+  <div class="row">
+    <input id="eventTime" type="time" value="08:00">
+  </div>
+
+  <div class="row">
+    <input id="eventTitle" type="text"
+      placeholder="Название события">
+  </div>
+
+  <div class="row">
+    <button style="width:100%"
+      onclick="addEvent()">
+      + Добавить событие
+    </button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="label">План на сегодня</div>
+  <div id="scheduleList"></div>
+</div>
 
 </section>
 
@@ -786,6 +804,140 @@ async function loadWeight() {
   document.getElementById('currentWeight').textContent =
     weights.length ? weights[0].value + ' кг' : '— кг';
 
+  // ==============================
+// LIFEOS SCHEDULE ENGINE
+// ==============================
+
+async function addEvent() {
+
+  const time = document.getElementById('eventTime').value;
+  const title = document.getElementById('eventTitle').value.trim();
+
+  if (!time || !title) {
+    alert('Заполни время и название события');
+    return;
+  }
+
+  await LifeOSDB.save('schedule', {
+    time,
+    title,
+    completed: false,
+    date: new Date().toDateString()
+  });
+
+  document.getElementById('eventTitle').value = '';
+
+  await renderSchedule();
+}
+
+async function renderSchedule() {
+
+  const allEvents = await LifeOSDB.getAll('schedule');
+
+  const today = new Date().toDateString();
+
+  const events = allEvents
+    .filter(event => event.date === today)
+    .sort((a, b) => a.time.localeCompare(b.time));
+
+  const container = document.getElementById('scheduleList');
+
+  if (!container) return;
+
+  if (!events.length) {
+    container.innerHTML =
+      '<p class="small">Расписание пока пустое.</p>';
+    return;
+  }
+
+  container.innerHTML = events.map(event => `
+    <div class="task">
+      <input type="checkbox"
+        ${event.completed ? 'checked' : ''}
+        onchange="toggleEvent(${event.id}, this.checked)">
+
+      <span style="color:var(--accent);min-width:48px">
+        ${event.time}
+      </span>
+
+      <span class="${event.completed ? 'done' : ''}"
+        style="flex:1">
+        ${escapeHTML(event.title)}
+      </span>
+
+      <button
+        style="padding:7px 10px;background:#30303b;color:white"
+        onclick="deleteEvent(${event.id})">
+        ×
+      </button>
+    </div>
+  `).join('');
+
+  updateCurrentEvent(events);
+}
+
+async function toggleEvent(id, completed) {
+
+  const events = await LifeOSDB.getAll('schedule');
+
+  const event = events.find(e => e.id === id);
+
+  if (!event) return;
+
+  await LifeOSDB.save('schedule', {
+    ...event,
+    completed
+  });
+
+  await renderSchedule();
+}
+
+async function deleteEvent(id) {
+
+  await LifeOSDB.remove('schedule', id);
+
+  await renderSchedule();
+}
+
+function updateCurrentEvent(events) {
+
+  const now = new Date();
+
+  const currentTime =
+    now.getHours() * 60 + now.getMinutes();
+
+  const current = events.find(event => {
+
+    const [hours, minutes] = event.time.split(':').map(Number);
+
+    const eventTime = hours * 60 + minutes;
+
+    return eventTime <= currentTime && !event.completed;
+
+  });
+
+  const display = document.getElementById('currentEvent');
+
+  if (display) {
+    display.textContent = current
+      ? 'Следующее незавершённое событие: ' + current.title
+      : 'Нет незавершённых прошедших событий';
+  }
+}
+
+function updateScheduleClock() {
+
+  const clock = document.getElementById('scheduleClock');
+
+  if (!clock) return;
+
+  clock.textContent = new Date().toLocaleTimeString(
+    'ru-RU',
+    {hour:'2-digit',minute:'2-digit'}
+  );
+}
+
+setInterval(updateScheduleClock, 1000);
 }
 
 async function init() {
